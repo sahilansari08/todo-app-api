@@ -22,4 +22,3 @@ console.log(s);
 const list2 = Object.keys(s)
 // console.log(list2);
 console.log(!list2.includes("title") && !list2.includes("completed"))
-
