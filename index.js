@@ -1,5 +1,6 @@
 const express = require('express')
 const fs = require("fs");
+const bcryptjs = require('bcryptjs');
 const { readFile, writeFile } = require('./common');
 
 const app = express();
@@ -24,7 +25,7 @@ app.get('/todo', (req, res) => {
 app.get('/todo/:id', (req, res) => {
 
     let data = readFile("todo")
-    var filtered_data = data.filter((item) => item.id == req.params.id)
+    var filtered_dsignupata = data.filter((item) => item.id == req.params.id)
 
     if (filtered_data.length > 0) {
         res.send({ status: true, data: filtered_data[0] })
@@ -85,4 +86,34 @@ app.delete('/todo/:id', (req, res) => {
     res.send({ status: true, data: data })
 })
 
+app.post('/signup', (req, res) => {
+    let data = readFile("user")
+    const signup_data = req.body
+
+    filtered_data = data.filter( (item)=> item.email == req.body.email)
+    if(filtered_data.length>0){
+        return res.send({status:false,message:"user already exist."})
+    }
+    signup_data.password = bcryptjs.hashSync(signup_data.password, 1)
+    signup_data.id = data.length + 1
+    signup_data.created_at = new Date()
+    signup_data.updated_at = null
+    data.push(signup_data)
+    writeFile('user', data)
+    res.send({ status: true, data: signup_data })
+
+})
+app.post('/login',(req,res)=>{
+    let data = readFile("user")
+    const login_data = req.body
+    filtered_data = data.filter( (item)=> item.email == req.body.email)
+    if(filtered_data.length == 0){
+        return res.send({status:false,message:"user not exist"})
+    }
+    const password1 = bcryptjs.compareSync(req.body.password,filtered_data[0].password)
+    if(!password1){
+        res.send({status:false,message:"Invalid email,password"})
+    }
+    res.send({status:true,data:filtered_data[0]})
+})
 app.listen(5000)

@@ -17,8 +17,20 @@ var list = [
 //         item.title = "pratik "
 //     }
 // }
-let s = list[0]
-console.log(s);
-const list2 = Object.keys(s)
-// console.log(list2);
-console.log(!list2.includes("title") && !list2.includes("completed"))
+// let s = list[0]
+// console.log(s);
+// const list2 = Object.keys(s)
+// // console.log(list2);
+// console.log(!list2.includes("title") && !list2.includes("completed"))
+
+const bcryptjs = require('bcryptjs');
+
+const password = '123';
+
+// const en_pass = bcryptjs.hashSync(password, 1);
+// console.log(en_pass);
+
+
+const bc = "$2a$08$JPaVMPLgUD13mugR7UILl.S0SlWqTRseZwGyjkSIWmPwDfe8GCIY2"
+const isValid = bcryptjs.compareSync("123", bc)
+console.log(isValid);
