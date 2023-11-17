@@ -1,6 +1,7 @@
 const express = require('express')
 const fs = require("fs");
 const bcryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { readFile, writeFile } = require('./common');
 
 const app = express();
@@ -114,6 +115,9 @@ app.post('/login',(req,res)=>{
     if(!password1){
         res.send({status:false,message:"Invalid email,password"})
     }
-    res.send({status:true,data:filtered_data[0]})
+    const token = jwt.sign(filtered_data[0], "12345678")
+    
+    res.send({status:true,data:{user:filtered_data[0],token},})
+
 })
 app.listen(5000)
